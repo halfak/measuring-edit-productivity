@@ -1,0 +1,15 @@
+#!./virtualenv/bin/python
+"""
+Wraps mwstream
+
+"""
+import sys
+
+try:
+    #activate_path = "virtualenv/bin/activate_this.py"
+    #exec(compile(open(activate_path, 'rb').read(), activate_path, 'exec'),
+    #     {"__file__": activate_path})
+    import mwstreaming.mwstream
+    mwstreaming.mwstream.main()
+except:
+    raise
