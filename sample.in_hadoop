@@ -1,0 +1,22 @@
+#!/bin/bash
+# Gather command line args
+job_name=$1
+n=$2
+input=$3
+output=$4
+
+echo "Running hadoop job"
+hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
+    -D  mapreduce.job.name=$job_name \
+    -D  mapreduce.output.fileoutputformat.compress=false \
+    -D  mapreduce.task.timeout=6000000 \
+    -D  mapreduce.reduce.speculative=false \
+    -D  mapreduce.reduce.vcores=2 \
+    -D  mapred.reduce.tasks=1 \
+    -D  mapreduce.map.memory.mb=5120 \
+    -archives    'hdfs:///user/halfak/virtualenv.zip#virtualenv' \
+    -input       $input \
+    -output      $output \
+    -mapper      "shuf -n $n" \
+    -reducer     cat
+

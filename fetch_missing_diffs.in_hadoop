@@ -1,8 +1,10 @@
 #!/bin/bash
 # Gather command line args
 job_name=$1
-input=$2
-output=$3
+diff_config=$2
+api_url=$3
+input=$4
+output=$5
 
 echo "Zipping up virtualenv"
 cd /home/halfak/venv/3.4/
@@ -14,26 +16,27 @@ echo "Moving virtualenv.zip to HDFS"
 hdfs dfs -put -f virtualenv.zip /user/halfak/virtualenv.zip;
 
 echo "Running hadoop job"
-hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
     -D  mapreduce.job.name=$job_name \
     -D  mapreduce.output.fileoutputformat.compress=true \
     -D  mapreduce.output.fileoutputformat.compress.type=BLOCK \
-    -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec \
+    -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.SnappyCodec \
     -D  mapreduce.task.timeout=6000000 \
     -D  stream.num.map.output.key.fields=3 \
     -D  mapreduce.partition.keypartitioner.options='-k1,1n' \
+    -D  mapreduce.job.output.key.comparator.class="org.apache.hadoop.mapred.lib.KeyFieldBasedComparator" \
+    -D  mapreduce.partition.keycomparator.options='-k1,1n -k2,2 -k3,3n' \
     -D  mapreduce.reduce.speculative=false \
     -D  mapreduce.reduce.env="LD_LIBRARY_PATH=virtualenv/lib/" \
     -D  mapreduce.map.env="LD_LIBRARY_PATH=virtualenv/lib/" \
     -D  mapreduce.map.memory.mb=5120 \
     -D  mapreduce.reduce.speculative=false \
-    -D  mapreduce.reduce.memory.mb=5120 \
     -D  mapreduce.reduce.vcores=2 \
     -D  mapreduce.job.reduces=2000 \
-    -files       mwstream  \
+    -files       mwstream,$diff_config  \
     -archives    'hdfs:///user/halfak/virtualenv.zip#virtualenv' \
     -input       $input \
     -output      $output \
-    -mapper      "./mwstream json2tsv id -" \
-    -reducer     "bash -c 'cut -f2 | ./mwstream persistence2stats" \
+    -mapper      "bash -c './mwstream fetch_missing_diffs --config=$diff_config --api=$api_url | ./mwstream json2tsv page.id timestamp id -'" \
+    -reducer     "cut -f4" \
     -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner

@@ -47,48 +47,68 @@ datasets/ptwiki-20141229.json: /a/halfak/streaming/ptwiki-20141229.json.bz2
 
 
 # Enwiki
-datasets/enwiki-20141106.diffs:
+datasets/enwiki-20150602.diffs:
 	./json2diffs.in_hadoop \
-            enwiki-20141106.diffs \
+            enwiki-20150602.diffs \
 	    western.diffs.yaml \
-	    /user/halfak/streaming/enwiki-20141106/json-bz2 \
-	    /user/halfak/streaming/enwiki-20141106/diffs-snappy && \
-	(du -hs /hdfs/user/halfak/streaming/enwiki-20141106/diffs-snappy; \
-	 ls -al --color=never /hdfs/user/halfak/streaming/enwiki-20141106/diffs-snappy) > \
-	datasets/enwiki-20141106.diffs
+	    /user/halfak/streaming/enwiki-20150602/json-snappy \
+	    /user/halfak/streaming/enwiki-20150602/diffs-snappy && \
+	(du -hs /hdfs/user/halfak/streaming/enwiki-20150602/diffs-snappy; \
+	 ls -al --color=never /hdfs/user/halfak/streaming/enwiki-20150602/diffs-snappy) > \
+	datasets/enwiki-20150602.diffs
 
 
-datasets/enwiki-20141106.subset-diffs:
+datasets/enwiki-20150602.subset-diffs:
 	./json2diffs.in_hadoop \
-	    enwiki-20141106.subset-diffs \
+	    enwiki-20150602.subset-diffs \
 	    western.diffs.yaml \
-	    /user/halfak/streaming/enwiki-20141106/json-bz2/enwiki-20141106-pages-meta-history1.json*.bz2 \
-	    /user/halfak/streaming/enwiki-20141106/subset-diffs-snappy && \
-	(du -hs /hdfs/user/halfak/streaming/enwiki-20141106/subset-diffs-snappy; \
-	 ls -al --color=never /hdfs/user/halfak/streaming/enwiki-20141106/subset-diffs-snappy) > \
-	datasets/enwiki-20141106.subset-diffs
+	    /user/halfak/streaming/enwiki-20150602/json-snappy/part-00001.snappy \
+	    /user/halfak/streaming/enwiki-20150602/subset-diffs-snappy && \
+	(du -hs /hdfs/user/halfak/streaming/enwiki-20150602/subset-diffs-snappy; \
+	 ls -al --color=never /hdfs/user/halfak/streaming/enwiki-20150602/subset-diffs-snappy) > \
+	datasets/enwiki-20150602.subset-diffs
 
 # Enwiki filtered diff test
-datastes/filtered-enwiki-20141106.diffs:
-	./json2diffs.in_hadoop \
-            filtered-enwiki-20141106.diffs \
-            western.diffs.yaml \
-            /user/halfak/streaming/enwiki-20141106/filtered-json-snappy \
-            /user/halfak/streaming/enwiki-20141106/filtered-diffs-snappy && \
-        (du -hs /hdfs/user/halfak/streaming/enwiki-20141106/filtered-diffs-snappy; \
-         ls -al --color=never /hdfs/user/halfak/streaming/enwiki-20141106/filtered-diffs-snappy) > \
-        datasets/filtered-enwiki-20141106.diffs
+#datasets/filtered-enwiki-20141106.diffs:
+#	./json2diffs.in_hadoop \
+#            filtered-enwiki-20141106.diffs \
+#            western.diffs.yaml \
+#            /user/halfak/streaming/enwiki-20141106/filtered-json-snappy \
+#            /user/halfak/streaming/enwiki-20141106/filtered-diffs-snappy && \
+#        (du -hs /hdfs/user/halfak/streaming/enwiki-20141106/filtered-diffs-snappy; \
+#         ls -al --color=never /hdfs/user/halfak/streaming/enwiki-20141106/filtered-diffs-snappy) > \
+#        datasets/filtered-enwiki-20141106.diffs
 
 
 
 # Enwiki filtered small diff test
-datastes/filtered-small-enwiki-20141106.diffs:
-	./json2diffs.in_hadoop \
-	    filtered-small-enwiki-20141106.diffs \
-	    western.diffs.yaml \
-	    /user/halfak/streaming/enwiki-20141106/filtered-json-plain-small.json \
-	    /user/halfak/streaming/enwiki-20141106/filtered-small-diffs-snappy && \
-	(du -hs /mnt/hdfs/user/halfak/streaming/enwiki-20141106/filtered-small-diffs-snappy; \
-	 ls -al --color=never /mnt/hdfs/user/halfak/streaming/enwiki-20141106/filtered-small-diffs-snappy) > \
-	datasets/filtered-small-enwiki-20141106.diffs
+#datasets/filtered-small-enwiki-20141106.diffs:
+#	./json2diffs.in_hadoop \
+#	    filtered-small-enwiki-20141106.diffs \
+#	    western.diffs.yaml \
+#	    /user/halfak/streaming/enwiki-20141106/filtered-json-plain-small.json \
+#	    /user/halfak/streaming/enwiki-20141106/filtered-small-diffs-snappy && \
+#	(du -hs /mnt/hdfs/user/halfak/streaming/enwiki-20141106/filtered-small-diffs-snappy; \
+#	 ls -al --color=never /mnt/hdfs/user/halfak/streaming/enwiki-20141106/filtered-small-diffs-snappy) > \
+#	datasets/filtered-small-enwiki-20141106.diffs
 
+# Enwiki token persistence
+datasets/enwiki-20150602.persistence: datasets/enwiki-20150602.diffs
+	./diffs2persistence.in_hadoop \
+		enwiki-20150602.persistence \
+		20150602000000 \
+		/user/halfak/streaming/enwiki-20150602/diffs-snappy \
+		/user/halfak/streaming/enwiki-20150602/persistence-bz2
+	(du -hs /mnt/hdfs/user/halfak/streaming/enwiki-20150602/persistence-snappy; \
+	 ls -al --color=never /mnt/hdfs/user/halfak/streaming/enwiki-20150602/persistence-snappy) > \
+	datasets/enwiki-20150602.persistence
+
+#datasets/enwiki-20141106.subset_persistence: datasets/enwiki-20141106.diffs
+#	./diffs2persistence.in_hadoop \
+#		enwiki-20141106.subset_persistence \
+#		20141106000000 \
+#		/user/halfak/streaming/enwiki-20141106/diffs-snappy/part-00001.snappy \
+#		/user/halfak/streaming/enwiki-20141106/subset_persistence-snappy
+#	(du -hs /mnt/hdfs/user/halfak/streaming/enwiki-20141106/subset_persistence-snappy; \
+#	 ls -al --color=never /mnt/hdfs/user/halfak/streaming/enwiki-20141106/subset_persistence-snappy) > \
+#	datasets/enwiki-20141106.subset_persistence
