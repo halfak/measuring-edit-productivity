@@ -11,7 +11,7 @@ hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
     -D  mapreduce.output.fileoutputformat.compress.type=BLOCK \
     -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.SnappyCodec \
     -D  mapreduce.task.timeout=6000000 \
-    -files       drop_text.py  \
+    -files       hadoop/drop_text.py  \
     -input       $input \
     -output      $output \
     -mapper      "python3 drop_text.py" \

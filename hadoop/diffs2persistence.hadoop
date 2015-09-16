@@ -33,7 +33,7 @@ hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
     -D  mapreduce.reduce.memory.mb=8192 \
     -D  mapreduce.reduce.vcores=2 \
     -D  mapreduce.job.reduces=2000 \
-    -files       mwstream  \
+    -files       hadoop/mwstream  \
     -archives    'hdfs:///user/halfak/virtualenv.zip#virtualenv' \
     -input       $input \
     -output      $output \
