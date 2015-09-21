@@ -105,16 +105,18 @@ datasets/enwiki-20150602.subset-diffs:
 #	datasets/enwiki-20150602.persistence
 
 # Enwiki token persistence (local)
-datasets/enwiki-20150602.persistence.json.bz2: datasets/enwiki-20150602.diffs
-	mwpersistence diffs2persistence
-		--config western.diffs.yaml \
-		--timeout 10 \
-		--subset 20150602000000 \
+datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
+	mwpersistence diffs2persistence \
+		datasets/enwiki-20150602/diffs-bz2/*.bz2 \
+		--sunset 20150602000000 \
 		--window 50 \
 		--revert-radius 15 \
-		--verbose | \
-	bzip2 -c > \
-	datasets/enwiki-20150602.persistence.json.bz2
+                --thread 10 \
+		--output datasets/enwiki-20150602/persistence-bz2 
+		--compress bz2 && \
+	(du -hs datasets/enwiki-20150602/diffs-bz2; \
+         ls -al --color=never datasets/enwiki-20150602/diffs-bz2) > \
+        datasets/enwiki-20150602/persistence.info
 
 #datasets/enwiki-20141106.subset_persistence: datasets/enwiki-20141106.diffs
 #	./hadoop/diffs2persistence.hadoop \
