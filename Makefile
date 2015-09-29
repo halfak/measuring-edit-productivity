@@ -114,8 +114,8 @@ datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
                 --thread 10 \
 		--output datasets/enwiki-20150602/persistence-bz2 
 		--compress bz2 && \
-	(du -hs datasets/enwiki-20150602/diffs-bz2; \
-         ls -al --color=never datasets/enwiki-20150602/diffs-bz2) > \
+	(du -hs datasets/enwiki-20150602/persistence-bz2; \
+         ls -al --color=never datasets/enwiki-20150602/persistence-bz2) > \
         datasets/enwiki-20150602/persistence.info
 
 #datasets/enwiki-20141106.subset_persistence: datasets/enwiki-20141106.diffs
