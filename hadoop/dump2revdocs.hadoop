@@ -1,0 +1,11 @@
+#!/bin/bash
+# Gather command line args
+reducers=$1
+input=$2
+output=$3
+
+hadoop jar ~/jars/wikihadoop-0.2.jar \
+  org.wikimedia.wikihadoop.job.JsonRevisionsSortedPerPage \
+  -i $input \
+  -o $output \
+  -r $reducers
