@@ -1,0 +1,11 @@
+#!./virtualenv/bin/python
+"""
+Wraps json2tsv
+
+"""
+
+try:
+    import json2tsv.json2tsv
+    json2tsv.json2tsv.main()
+except:
+    raise

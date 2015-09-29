@@ -5,6 +5,9 @@ diff_config=$2
 input=$3
 output=$4
 
+echo "Updating virtualenv"
+pip install -r requirements.txt --upgrade
+
 echo "Zipping up virtualenv"
 cd /home/halfak/venv/3.4/
 zip -rq ../3.4.zip *
@@ -12,31 +15,23 @@ cd -
 cp /home/halfak/venv/3.4.zip virtualenv.zip
 
 echo "Moving virtualenv.zip to HDFS"
-hdfs dfs -put -f virtualenv.zip /user/halfak/virtualenv.zip;
+hdfs dfs -put -f virtualenv.zip /user/halfak/virtualenv.zip
 
 echo "Running hadoop job"
 hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
     -D  mapreduce.job.name=$job_name \
+    -d  mapreduce.input.fileinputformat.split.minsize=9999999999999 \
     -D  mapreduce.output.fileoutputformat.compress=true \
     -D  mapreduce.output.fileoutputformat.compress.type=BLOCK \
-    -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.SnappyCodec \
+    -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec \
     -D  mapreduce.task.timeout=6000000 \
-    -D  stream.num.map.output.key.fields=3 \
-    -D  mapreduce.partition.keypartitioner.options='-k1,1n' \
-    -D  mapreduce.job.output.key.comparator.class="org.apache.hadoop.mapred.lib.KeyFieldBasedComparator" \
-    -D  mapreduce.partition.keycomparator.options='-k1,1n -k2,2 -k3,3n' \
+    -D  mapreduce.map.memory.mb=1024 \
     -D  mapreduce.reduce.speculative=false \
-    -D  mapreduce.reduce.env="LD_LIBRARY_PATH=virtualenv/lib/" \
-    -D  mapreduce.map.env="LD_LIBRARY_PATH=virtualenv/lib/" \
-    -D  mapreduce.map.memory.mb=5120 \
-    -D  mapreduce.reduce.speculative=false \
-    -D  mapreduce.reduce.memory.mb=5120 \
+    -D  mapreduce.reduce.memory.mb=1024 \
     -D  mapreduce.reduce.vcores=2 \
-    -D  mapreduce.job.reduces=2000 \
-    -files       hadoop/mwstream,$diff_config  \
+    -D  mapreduce.job.reduces=0 \
+    -files       hadoop/mwdiffs,$diff_config  \
     -archives    'hdfs:///user/halfak/virtualenv.zip#virtualenv' \
     -input       $input \
     -output      $output \
-    -mapper      "bash -c './mwstream truncate_text | ./mwstream json2diffs --namespaces=0 --config=$diff_config --timeout=10 --verbose | ./mwstream json2tsv page.id timestamp id -'" \
-    -reducer     "bash -c 'cut -f4 | ./mwstream mend_diffs --config=$diff_config --drop-text --timeout=10 --verbose'" \
-    -partitioner org.apache.hadoop.mapred.lib.KeyFieldBasedPartitioner
+    -mapper      "bash -c 'truncate_text.py | ./mwdiffs revdocs2diffs --namespaces=0 --config=$diff_config --timeout=10 --verbose'"

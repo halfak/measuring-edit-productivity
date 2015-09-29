@@ -1,0 +1,11 @@
+#!./virtualenv/bin/python
+"""
+Wraps mwdiffs
+
+"""
+
+try:
+    import mwdiffs.mwdiffs
+    mwdiffs.mwdiffs.main()
+except:
+    raise

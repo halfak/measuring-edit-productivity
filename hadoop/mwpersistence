@@ -1,0 +1,11 @@
+#!./virtualenv/bin/python
+"""
+Wraps mwpersistence
+
+"""
+
+try:
+    import mwpersistence.mwpersistence
+    mwpersistence.mwpersistence.main()
+except:
+    raise
