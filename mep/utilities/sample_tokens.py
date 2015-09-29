@@ -15,12 +15,12 @@ import re
 import sys
 
 import docopt
-import mwpersistence.files
+import mwcli.files
 import para
 
 import mysqltsv
 
-HEADERS = ['token', 'is_whitespace', 'contains_letters', 'persisted',
+HEADERS = ['rev_id', 'token', 'is_whitespace', 'contains_letters', 'persisted',
            'seconds_visible', 'non_self_persisted', 'seconds_possible',
            'revisions_processed', 'non_self_processed']
 
@@ -45,7 +45,7 @@ def run(paths, rate):
     writer = mysqltsv.Writer(sys.stdout, headers=HEADERS)
 
     def process_path(path):
-        f = mwpersistence.files.reader(path)
+        f = mwcli.files.reader(path)
 
         return sample_tokens((json.loads(line) for line in f), rate)
 
@@ -57,7 +57,8 @@ def sample_tokens(rev_docs, rate):
     for rev_doc in rev_docs:
         for token_doc in rev_doc['persistence']['tokens']:
             if random.random() <= rate:
-                yield (token_doc['text'],
+                yield (rev_doc['id'],
+                       token_doc['text'],
                        len(token_doc['text'].strip()) == 0,
                        LETTERS_RE.match(token_doc['text']) is not None,
                        token_doc['persisted'],
