@@ -3,11 +3,11 @@ hdfs_dir = /user/halfak/streaming
 # Enwiki revdocs (hadoop)
 datasets/enwiki-20150901.revdocs:
 	./hadoop/dump2revdocs.hadoop \
-	    western.diffs.yaml \
-	    $(hdfs_dir)/enwiki-20150901/json-snappy \
-	    $(hdfs_dir)/enwiki-20150901/diffs-bz2 && \
-	(du -hs /hdfs$(hdfs_dir)/enwiki-20150901/diffs-bz2; \
-	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150901/diffs-bz2) > \
+	    2000 \
+	    $(hdfs_dir)/enwiki-20150901/xml-bz2 \
+	    $(hdfs_dir)/enwiki-20150901/revdocs-bz2 && \
+	(du -hs /hdfs$(hdfs_dir)/enwiki-20150901/revdocs-bz2; \
+	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150901/revdocs-bz2) > \
 	datasets/enwiki-20150602.diffs
 
 # Enwiki diffs (hadoop)
