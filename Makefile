@@ -1,5 +1,11 @@
 hdfs_dir = /user/halfak/streaming
 
+# Enwiki revdocs unsorted (local)
+datasets/enwiki-20150901/revdocs_unsorted-bz2:
+	mwxml dump2revdocs \
+		/mnt/data/xmldatadumps/public/enwiki/20150901/*pages-meta-history*.xml*.bz2 \
+		--output datasets/enwiki-20150901/revdocs_unsorted-bz2
+
 # Enwiki revdocs (hadoop)
 datasets/enwiki-20150901.revdocs:
 	./hadoop/dump2revdocs.hadoop \
