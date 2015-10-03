@@ -17,6 +17,16 @@ datasets/enwiki-20150901.revdocs:
 	datasets/enwiki-20150602.diffs
 
 # Enwiki diffs (hadoop)
+datasets/enwiki-20150602.diffs: datasets/enwiki-20150602.revdocs
+	./hadoop/revdocs2diffs.hadoop \
+		enwiki-20150602.diffs \
+		western.diffs.yaml \
+		$(hdfs_dir)/enwiki-20150602/revdocs-bz2 \
+		$(hdfs_dir)/enwiki-20150602/diffs-bz2 && \
+	(du -hs /hdfs$(hdfs_dir)/enwiki-20150602/diffs-bz2; \
+	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150602/diffs-bz2) > \
+	datasets/enwiki-20150602.diffs
+
 datasets/enwiki-20150901.diffs:
 	./hadoop/json2diffs.hadoop \
 		enwiki-20150901.diffs \
@@ -25,7 +35,7 @@ datasets/enwiki-20150901.diffs:
 		$(hdfs_dir)/enwiki-20150901/diffs-bz2 && \
 	(du -hs /hdfs$(hdfs_dir)/enwiki-20150901/diffs-bz2; \
 	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150901/diffs-bz2) > \
-	datasets/enwiki-20150602.diffs
+	datasets/enwiki-20150901.diffs
 
 # Enwiki token persistence (local)
 datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info

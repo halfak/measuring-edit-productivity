@@ -20,7 +20,7 @@ hdfs dfs -put -f virtualenv.zip /user/halfak/virtualenv.zip
 echo "Running hadoop job"
 hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
     -D  mapreduce.job.name=$job_name \
-    -d  mapreduce.input.fileinputformat.split.minsize=9999999999999 \
+    -D  mapreduce.input.fileinputformat.split.minsize=9999999999999 \
     -D  mapreduce.output.fileoutputformat.compress=true \
     -D  mapreduce.output.fileoutputformat.compress.type=BLOCK \
     -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec \
