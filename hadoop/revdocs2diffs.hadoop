@@ -34,4 +34,4 @@ hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
     -archives    'hdfs:///user/halfak/virtualenv.zip#virtualenv' \
     -input       $input \
     -output      $output \
-    -mapper      "bash -c 'truncate_text.py | ./mwdiffs revdocs2diffs --namespaces=0 --config=$diff_config --timeout=10 --verbose'"
+    -mapper      "bash -c './mwdiffs revdocs2diffs --namespaces=0 --config=$diff_config --timeout=10 --verbose'"
