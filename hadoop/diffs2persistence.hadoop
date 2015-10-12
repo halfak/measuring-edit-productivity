@@ -25,9 +25,8 @@ hadoop jar /opt/hadoop/share/hadoop/tools/lib/hadoop-*streaming*.jar \
     -D  mapreduce.output.fileoutputformat.compress.type=BLOCK \
     -D  mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec \
     -D  mapreduce.task.timeout=6000000 \
-    -D  mapreduce.map.memory.mb=1024 \
+    -D  mapreduce.map.memory.mb=8192 \
     -D  mapreduce.reduce.speculative=false \
-    -D  mapreduce.reduce.memory.mb=1024 \
     -D  mapreduce.reduce.vcores=2 \
     -D  mapreduce.job.reduces=0 \
     -files       hadoop/mwpersistence \
