@@ -58,3 +58,16 @@ datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
 #	(du -hs /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2; \
 #	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2) > \
 #	datasets/enwiki-20150602/persistence.info
+
+# Enwiki revision stats for words (local)
+datasets/enwiki-20150602/word-stats.info: datasets/enwiki-20150602/persistence.info
+	mwpersistence persistence2stats \
+		datasets/enwiki-20150602/persistence-bz2/*.bz2 \
+		--min-persisted 5 \
+		--min-visible 48 \
+		--exclude '^\s+$' \
+		--verbose \
+		--output datasets/enwiki-20150602/word-stats-bz2 && \
+	(du -hs datasets/enwiki-20150602/word-stats-bz2; \
+	 ls -al --color=never datasets/enwiki-20150602/word-stats-bz2) > \
+	datasets/enwiki-20150602/word-stats.info
