@@ -38,7 +38,7 @@ datasets/enwiki-20150901/diffs.info:
 	datasets/enwiki-20150901/diffs.info
 
 # Enwiki token persistence (local)
-datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
+datasets/enwiki-20150602/persistence-local.info: datasets/enwiki-20150602/diffs.info
 	mwpersistence diffs2persistence \
 		datasets/enwiki-20150602/diffs-bz2/*.bz2 \
 		--sunset 20150602000000 \
@@ -47,14 +47,14 @@ datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
 		--output datasets/enwiki-20150602/persistence-bz2 && \
 	(du -hs datasets/enwiki-20150602/persistence-bz2; \
 	 ls -al --color=never datasets/enwiki-20150602/persistence-bz2) > \
-	datasets/enwiki-20150602/persistence.info
+	datasets/enwiki-20150602/persistence-local.info
 
-#datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
-#	./hadoop/diffs2persistence.hadoop \
-#		enwiki-20150602.persistence \
-#		20150602000000 \
-#		$(hdfs_dir)/enwiki-20150602/diffs-bz2 \
-#		$(hdfs_dir)/enwiki-20150602/persistence-bz2 && \
-#	(du -hs /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2; \
-#	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2) > \
-#	datasets/enwiki-20150602/persistence.info
+datasets/enwiki-20150602/persistence-hadoop.info: datasets/enwiki-20150602/diffs.info
+	./hadoop/diffs2persistence.hadoop \
+		enwiki-20150602.persistence \
+		20150602000000 \
+		$(hdfs_dir)/enwiki-20150602/diffs-bz2 \
+		$(hdfs_dir)/enwiki-20150602/persistence-bz2 && \
+	(du -hs /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2; \
+         ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2) > \
+	datasets/enwiki-20150602/persistence-hadoop.info
