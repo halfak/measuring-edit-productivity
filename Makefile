@@ -65,8 +65,7 @@ datasets/enwiki-20150602/word-stats.info: datasets/enwiki-20150602/persistence.i
 		datasets/enwiki-20150602/persistence-bz2/*.bz2 \
 		--min-persisted 5 \
 		--min-visible 48 \
-		--exclude '^\s+$' \
-		--verbose \
+		--exclude '\\s+' \
 		--output datasets/enwiki-20150602/word-stats-bz2 && \
 	(du -hs datasets/enwiki-20150602/word-stats-bz2; \
 	 ls -al --color=never datasets/enwiki-20150602/word-stats-bz2) > \
