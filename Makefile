@@ -49,15 +49,15 @@ datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
 	 ls -al --color=never datasets/enwiki-20150602/persistence-bz2) > \
 	datasets/enwiki-20150602/persistence.info
 
-#datasets/enwiki-20150602/persistence.info: datasets/enwiki-20150602/diffs.info
-#	./hadoop/diffs2persistence.hadoop \
-#		enwiki-20150602.persistence \
-#		20150602000000 \
-#		$(hdfs_dir)/enwiki-20150602/diffs-bz2 \
-#		$(hdfs_dir)/enwiki-20150602/persistence-bz2 && \
-#	(du -hs /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2; \
-#	 ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2) > \
-#	datasets/enwiki-20150602/persistence.info
+datasets/enwiki-20150602/persistence-hadoop.info: datasets/enwiki-20150602/diffs.info
+	./hadoop/diffs2persistence.hadoop \
+		enwiki-20150602.persistence \
+		20150602000000 \
+		$(hdfs_dir)/enwiki-20150602/diffs-bz2 \
+		$(hdfs_dir)/enwiki-20150602/persistence-bz2 && \
+	(du -hs /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2; \
+         ls -al --color=never /hdfs$(hdfs_dir)/enwiki-20150602/persistence-bz2) > \
+	datasets/enwiki-20150602/persistence-hadoop.info
 
 # Enwiki revision stats for words (local)
 datasets/enwiki-20150602/word-stats.info: datasets/enwiki-20150602/persistence.info
@@ -70,3 +70,20 @@ datasets/enwiki-20150602/word-stats.info: datasets/enwiki-20150602/persistence.i
 	(du -hs datasets/enwiki-20150602/word-stats-bz2; \
 	 ls -al --color=never datasets/enwiki-20150602/word-stats-bz2) > \
 	datasets/enwiki-20150602/word-stats.info
+
+datasets/enwiki-20150602/word_persistence.tsv: datasets/enwiki-20150602/word-stats.info
+	bzcat datasets/enwiki-20150602/word-stats-bz2/*.bz2 |
+	json2tsv \
+		id page.id page.namespace page.title user.id user.text comment minor sha1 \
+		persistence.revisions_processed \
+		persistence.non_self_processed \
+		persistence.seconds_possible \
+		persistence.tokens_added \
+		persistence.persistent_tokens \
+		persistence.non_self_persistent_tokens \
+		persistence.censored \
+		persistence.non_self_censored \
+		persistence.sum_log_persisted \
+		persistence.sum_log_non_self_persisted \
+		persistence.sum_seconds_visible > \
+	datasets/enwiki-20150602/word_persistence.tsv
