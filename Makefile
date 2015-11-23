@@ -72,7 +72,7 @@ datasets/enwiki-20150602/word-stats.info: datasets/enwiki-20150602/persistence.i
 	datasets/enwiki-20150602/word-stats.info
 
 datasets/enwiki-20150602/word_persistence.tsv: datasets/enwiki-20150602/word-stats.info
-	bzcat datasets/enwiki-20150602/word-stats-bz2/*.bz2 |
+	bzcat datasets/enwiki-20150602/word-stats-bz2/*.bz2 | \
 	json2tsv \
 		id page.id page.namespace page.title user.id user.text comment minor sha1 \
 		persistence.revisions_processed \
@@ -85,5 +85,5 @@ datasets/enwiki-20150602/word_persistence.tsv: datasets/enwiki-20150602/word-sta
 		persistence.non_self_censored \
 		persistence.sum_log_persisted \
 		persistence.sum_log_non_self_persisted \
-		persistence.sum_seconds_visible > \
+		persistence.sum_log_seconds_visible > \
 	datasets/enwiki-20150602/word_persistence.tsv
