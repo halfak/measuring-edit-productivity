@@ -1,4 +1,5 @@
 hdfs_dir = /user/halfak/streaming
+dbstore = --defaults-file=~/.my.research.cnf -h analytics-store.eqiad.wmnet -u research
 
 # Enwiki revdocs unsorted (local)
 datasets/enwiki-20150901/revdocs_unsorted-bz2:
@@ -74,7 +75,7 @@ datasets/enwiki-20150602/word-stats.info: datasets/enwiki-20150602/persistence.i
 datasets/enwiki-20150602/word_persistence.tsv: datasets/enwiki-20150602/word-stats.info
 	bzcat datasets/enwiki-20150602/word-stats-bz2/*.bz2 | \
 	json2tsv \
-		id page.id page.namespace page.title user.id user.text comment minor sha1 \
+		id timestamp page.id page.namespace page.title user.id user.text comment minor sha1 \
 		persistence.revisions_processed \
 		persistence.non_self_processed \
 		persistence.seconds_possible \
@@ -85,5 +86,17 @@ datasets/enwiki-20150602/word_persistence.tsv: datasets/enwiki-20150602/word-sta
 		persistence.non_self_censored \
 		persistence.sum_log_persisted \
 		persistence.sum_log_non_self_persisted \
-		persistence.sum_log_seconds_visible > \
+		persistence.sum_log_seconds_visible | pv > \
 	datasets/enwiki-20150602/word_persistence.tsv
+
+datasets/word_persistence.created.table: sql/word_persistence.create.sql
+	cat sql/word_persistence.create.sql | \
+	mysql $(dbstore) && date > \
+	datasets/word_persistence.created.table
+
+datasets/word_persistence.loaded.table: datasets/word_persistence.created.table
+	ln -s datasets/enwiki-20150602/word_persistence.tsv mep_word_persistence && \
+	mysqlimport $(dbstore) --local staging mep_word_persistence && \
+	rm -f mep_word_persistence && date > \
+	datasets/word_persistence.loaded.table
+
