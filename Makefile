@@ -100,3 +100,13 @@ datasets/word_persistence.loaded.table: datasets/word_persistence.created.table
 	rm -f mep_word_persistence && date > \
 	datasets/word_persistence.loaded.table
 
+
+datasets/enwiki-20150602/monthly_persistence_stats.tsv: sql/monthly_persistence_stats.sql
+	cat sql/monthly_persistence_stats.sql | \
+	mysql $(dbstore) staging > \
+	datasets/enwiki-20150602/monthly_persistence_stats.tsv
+
+datasets/enwiki-20150602/per_user_persistence_stats.tsv: sql/per_user_persistence_stats.sql
+	cat sql/per_user_persistence_stats.sql | \
+	mysql $(dbstore) staging > \
+	datasets/enwiki-20150602/per_user_persistence_stats.tsv
