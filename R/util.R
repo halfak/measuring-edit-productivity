@@ -1,5 +1,4 @@
 library(ggplot2)
-library(doBy)
 library(data.table)
 
 
@@ -121,16 +120,18 @@ if.na = function(values, then){
 	)
 }
 
-if.then = function(conditions, then, otherwise){
-	sapply(
-		conditions,
-		function(condition){
+if.then = function(conditions, thens, otherwises){
+	mapply(
+		function(condition, then, otherwise){
 			if(condition){
 				then
 			}else{
 				otherwise
 			}
-		}
+		},
+		conditions,
+		thens,
+		otherwises
 	)
 }
 
